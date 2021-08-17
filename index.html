@@ -1,22 +1,15 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>ChatAssistX</title>
+    <title>ChatAssistX 1.8.1.0</title>
     <script>
-        // get parameter 가져옴
-        var url_string = window.location.href;
-        var url = new URL(url_string);
         // ChatAssist 설정 변수
         window.config = {};
-        
-        // 채널 아이디. 주소끝 ?preset=(프리셋아이디) 를 붙여 지정합니다.
-        // 강제지정은 url.searchParams.get("preset") 을 "프리셋명" 으로 바꾸면 됩니다.
-        window.config.preset = url.searchParams.get("preset");
         
         window.config.allowExternalSource = false; // 외부이미지([img 주소] 문법) 허용하려면 true로 변경
         window.config.allowEmoticon = true; // 디시콘 사용가능유무 사용금지로 바꾸려면 false로 변경
         window.config.ignoreMQEmoticon = true; // 마퀴태그+디시콘 사용여부 사용하려면 false로 변경
-        window.config.ignoreNickname = "nightbot,twipkr,yousa_bot" // 필터링할 닉네임 목록(,로 구분)
+        window.config.ignoreNickname = "nightbot,twipkr" // 필터링할 닉네임 목록(,로 구분)
         window.config.enableTwitchEmoticon = true; // 트위치 이모티콘 사용여부
         window.config.TwitchEmoticonsize = "1.0"; //트위치 이모티콘 크기 1.0/2.0/3.0 처럼 입력
         
@@ -27,29 +20,24 @@
         window.emoticon = {};
         window.emoticon.address = "https://funzinnu.com/stream/dccon.js";
         window.emoticon.isActive = false; // 이모티콘 목록 불러와졌는지 여부
-        window.emoticon.list = {}; // 이모티콘 목록
+        window.emoticon.list = {}; // 이모티콘 목록(위 address에서 불러와서 채워짐)
         
-        // 스트리머 전용 명령어(~통계,~투표) 를 사용하기 위한 아이디 지정
-        // 플랫폼별 닉네임을 입력합니다
-        window.config.streamer = {
-            "twitch" : "조원희_",
-            "kakaopot" : "메이플 하는 원희",
-            "youtube" : "조원희_"
+        // 치환 리스트
+        // 입력한 단어는 채팅 위젯에서 치환되어 보입니다
+        // 비울경우 {}로 대체
+        window.config.replace = {
+            "원게더":"원희 트게더",
+            "원박이":"원희 시청자",
+            "원둥이":"원희 시청자"
         }
         
-        // tapic 세팅
-        // JSAssist 없이 트위치 연동을 가능하게 합니다.
-        // http://chat.lastorder.xyz/getauth.html 에서 oauth을 발급후 사용 가능합니다.
-        // oauth 값은 주소끝에 ?preset=(프리셋아이디)&oauth=(oauth키) 를 붙여 입력할수 있습니다.
-        // 절대! 절대!! 절대!!! html파일에 직접 oauth 값을 입력하지 마세요. oauth 값이 유출된 경우 타 사용자가 oauth 값을 악용할 수 있습니다!(타 채널에 들어가 어그로, 설정 임의변경 등등등...)
-        // 장점: 트위치 이모티콘 리스트 업데이트 없이 계속 최신 이모티콘 사용가능!!!
-        window.tapic = {};
-        window.tapic.oauth = url.searchParams.get("oauth") === null ? "" : url.searchParams.get("oauth");
-        window.tapic.channelname = "funzinnu";
-        window.tapic.inited = false;
-        
-        // 기본값 입력처리
-        if(window.config.preset == null || window.config.preset == "") window.config.preset = "default";
+        // 익명화 설정
+        // 방송에 표시되는 닉네임만 익명화할수 있습니다.
+        window.config.anon = false; // 익명 사용시 true
+        window.config.anon_nickname = "손님";
+        window.config.anon_random = false; // 랜덤 숫자를 붙이려면 "number" 랜덤 문자열을 붙이려면 "string"
+        window.config.random_length = 4; // 랜덤 숫자/닉네임 길이 지정(위에서 number나 string 지정시)
+        window.config.fix_random_id = false; // 랜덤 닉네임 고정(같은 시청자는 같은 랜덤 문자 배정) 활성화시 true - 새로고침시 초기화됨
     </script>
     <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.min.js"></script>
